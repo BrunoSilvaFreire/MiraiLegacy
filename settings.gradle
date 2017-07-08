@@ -1,0 +1,3 @@
+rootProject.name = 'mirai'
+include 'bot', 'anime-plugin'
+
