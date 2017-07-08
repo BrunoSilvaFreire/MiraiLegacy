@@ -1,5 +1,5 @@
 package me.ddevil.mirai
 
-class Mirai{
+class Mirai {
 
 }
