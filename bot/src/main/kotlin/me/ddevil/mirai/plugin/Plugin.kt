@@ -1,21 +1,19 @@
 package me.ddevil.mirai.plugin
 
-import me.ddevil.util.misc.AbstractNameableDescribable
-import me.ddevil.util.misc.Describable
-import me.ddevil.util.misc.Nameable
+import me.ddevil.mirai.exception.plugin.PluginAlreadyInitializedException
 
-interface Plugin : Nameable, Describable {
+abstract class Plugin {
+    var initialized: Boolean = false
+        private set
 
-    fun onEnable()
+    lateinit var info: PluginInfo
+        private set
 
-    fun onDisable()
-
+    fun init(info: PluginInfo) {
+        if (initialized) {
+            throw PluginAlreadyInitializedException(this)
+        }
+        this.initialized = true
+        this.info = info
+    }
 }
-
-abstract class AbstractPlugin
-@JvmOverloads
-constructor(
-        name: String,
-        alias: String,
-        description: List<String> = emptyList()
-) : AbstractNameableDescribable(name, alias, description), Plugin
