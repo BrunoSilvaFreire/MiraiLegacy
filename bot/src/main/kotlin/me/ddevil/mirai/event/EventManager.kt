@@ -3,6 +3,7 @@ package me.ddevil.mirai.event
 import com.google.common.collect.HashMultimap
 import com.google.common.collect.Multimap
 import com.google.common.eventbus.EventBus
+import me.ddevil.mirai.plugin.Plugin
 import me.ddevil.util.minusAssign
 
 class EventManager {

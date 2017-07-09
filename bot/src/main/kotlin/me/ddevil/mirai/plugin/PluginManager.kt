@@ -1,6 +1,7 @@
 package me.ddevil.mirai.plugin
 
 import me.ddevil.json.parse.JsonParser
+import me.ddevil.mirai.Mirai
 import me.ddevil.mirai.exception.plugin.PluginInfoMissingException
 import me.ddevil.mirai.plugin.loader.pluginExtension
 import me.ddevil.mirai.plugin.loader.pluginInfoEntryLocation
@@ -9,7 +10,9 @@ import java.io.FileFilter
 import java.util.jar.JarEntry
 import java.util.jar.JarFile
 
-class PluginManager {
+class PluginManager(
+        val mirai: Mirai
+) {
     companion object {
         const val pluginsFolderName = "plugins"
     }
@@ -30,7 +33,8 @@ class PluginManager {
     private fun loadPlugins() {
         val possiblePlugins = pluginsFolder.listFiles(FileFilter {
             return@FileFilter it.extension.endsWith(pluginExtension)
-        })
+        }) ?: return
+
         for (file in possiblePlugins) {
             try {
                 val plugin = tryLoadPlugin(file)
@@ -48,7 +52,7 @@ class PluginManager {
         val main = Class.forName(pluginInfo.main)
         val mainInstance = main.newInstance()
         val plugin = mainInstance as Plugin
-        plugin.init(pluginInfo)
+        plugin.init(pluginInfo, mirai)
         return plugin
     }
 

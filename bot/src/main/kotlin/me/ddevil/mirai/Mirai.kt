@@ -1,16 +1,43 @@
 package me.ddevil.mirai
 
+import me.ddevil.mirai.command.CommandManager
 import me.ddevil.mirai.event.EventManager
+import me.ddevil.mirai.locale.Lang
+import me.ddevil.mirai.locale.MessageVariable
+import me.ddevil.mirai.locale.MiraiLocale
 import me.ddevil.mirai.plugin.PluginManager
+import net.dv8tion.jda.core.AccountType
+import net.dv8tion.jda.core.JDA
+import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.entities.MessageChannel
+import java.io.File
 
-class Mirai {
-    companion object {
-        @JvmStatic
-        fun main(args: Array<String>) {
+const val mainConfigFileName = "miraiConfig.json"
+const val configTokenIdentifier = "token"
+const val exampleToken = "Put ur token hear :D"
 
-        }
+class Mirai(
+        val config: MiraiConfig
+) {
+    val jda: JDA = JDABuilder(AccountType.BOT)
+            .setToken(config.token)
+            .buildAsync()
+    val eventManager = EventManager()
+    val pluginManager = PluginManager(this)
+    val commandManager = CommandManager(this)
+    val locale = MiraiLocale(File("./${MiraiLocale.fileName}"))
+
+
+    init {
+        pluginManager.init()
     }
 
-    val eventManager = EventManager()
-    val pluginManager = PluginManager()
+    fun sendMessage(channel: MessageChannel, lang: Lang, vararg variables: MessageVariable) {
+        val msg = locale.getMsg(lang, *variables)
+        sendMessage(channel, msg)
+    }
+    fun sendMessage(channel: MessageChannel, msg: String){
+        channel.sendMessage(msg).queue()
+    }
 }
+

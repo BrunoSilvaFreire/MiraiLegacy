@@ -12,6 +12,7 @@ hs_err_pid*
 .gradle
 .idea
 /build/
+miraiConfig.json
 gradle-app.setting
 !gradle-wrapper.jar
 .gradletasknamecache
