@@ -1,0 +1,10 @@
+apply plugin: 'kotlin'
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+    jcenter()
+}
+dependencies {
+    compile project(":bot")
+}

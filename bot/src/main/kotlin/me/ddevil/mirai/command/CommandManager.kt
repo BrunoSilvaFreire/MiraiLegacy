@@ -50,6 +50,13 @@ class CommandManager(val mirai: Mirai) : ListenerAdapter() {
             mirai.sendMessage(event.channel, Lang.UNKNOWN_COMMAND, *event.exportVariables())
             return
         }
+
+
+        //Check if has permission
+        if (!mirai.permissionManager.hasPermission(event.member, cmd)) {
+            mirai.sendMessage(event.channel, Lang.NO_PERMISSION, *event.exportVariables())
+            return
+        }
         val args = CommandArgs(label, a.slice(1..a.lastIndex).toTypedArray())
         try {
             cmd.execute(mirai, event, args)
@@ -70,6 +77,7 @@ class CommandManager(val mirai: Mirai) : ListenerAdapter() {
     val commands: List<Command>
         get() = ArrayList(knownCommands)
 }
+
 const val DISCORD_LIMIT = 1000
 private fun ensureLimit(synopsis: String): String {
     val size = synopsis.count()

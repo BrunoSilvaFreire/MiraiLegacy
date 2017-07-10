@@ -1,10 +1,12 @@
 package me.ddevil.mirai
 
 import me.ddevil.mirai.command.CommandManager
+import me.ddevil.mirai.command.CommandOwner
 import me.ddevil.mirai.event.EventManager
 import me.ddevil.mirai.locale.Lang
 import me.ddevil.mirai.locale.MessageVariable
 import me.ddevil.mirai.locale.MiraiLocale
+import me.ddevil.mirai.permission.PermissionManager
 import me.ddevil.mirai.plugin.PluginManager
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
@@ -18,11 +20,13 @@ const val exampleToken = "Put ur token hear :D"
 
 class Mirai(
         val config: MiraiConfig
-) {
+) : CommandOwner {
+    override val pluginPrefix = "mirai"
     val jda: JDA = JDABuilder(AccountType.BOT)
             .setToken(config.token)
             .buildAsync()
     val eventManager = EventManager()
+    val permissionManager = PermissionManager(this)
     val pluginManager = PluginManager(this)
     val commandManager = CommandManager(this)
     val locale = MiraiLocale(File("./${MiraiLocale.fileName}"))
