@@ -30,13 +30,32 @@ class Mirai(
 
     init {
         pluginManager.init()
+        broadcast(Lang.MIRAI_INIT,
+                MessageVariable("plugins", pluginManager.plugins.size.toString()),
+                MessageVariable("commands", commandManager.commands.size.toString())
+        )
+    }
+
+    fun broadcast(lang: Lang, vararg variables: MessageVariable) {
+        val msg = locale.getMsg(lang, *variables)
+        broadcast(msg)
+    }
+
+    fun broadcast(s: String) {
+        for (guild in jda.guilds) {
+            val ch = guild.publicChannel
+            if (ch != null) {
+                sendMessage(ch, s)
+            }
+        }
     }
 
     fun sendMessage(channel: MessageChannel, lang: Lang, vararg variables: MessageVariable) {
         val msg = locale.getMsg(lang, *variables)
         sendMessage(channel, msg)
     }
-    fun sendMessage(channel: MessageChannel, msg: String){
+
+    fun sendMessage(channel: MessageChannel, msg: String) {
         channel.sendMessage(msg).queue()
     }
 }

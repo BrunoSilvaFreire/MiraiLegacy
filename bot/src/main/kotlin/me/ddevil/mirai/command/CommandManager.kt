@@ -3,19 +3,24 @@ package me.ddevil.mirai.command
 import me.ddevil.mirai.Mirai
 import me.ddevil.mirai.locale.Lang
 import me.ddevil.mirai.util.exportVariables
+import me.ddevil.util.command.CommandArgs
+import me.ddevil.util.getStackTraceText
+import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import net.dv8tion.jda.core.hooks.ListenerAdapter
+import java.awt.Color
 
 class CommandManager(val mirai: Mirai) : ListenerAdapter() {
     companion object {
         val defaultCommands = arrayOf(
-                HelpCommand()
+                HelpCommand(),
+                PluginCommand()
         )
     }
 
     private var knownCommands = ArrayList<Command>()
 
-    val commandChar = ':'
+    val commandChar = '!'
 
     init {
         for (command in defaultCommands) {
@@ -37,14 +42,25 @@ class CommandManager(val mirai: Mirai) : ListenerAdapter() {
         if (!content.startsWith(commandChar)) {
             return
         }
-        val label = message.content.substring(1)
+        val a = content.split(' ')
+        val label = a[0].substring(1)
         val cmd = getCommand(label)
         if (cmd == null) {
             //No command
             mirai.sendMessage(event.channel, Lang.UNKNOWN_COMMAND, *event.exportVariables())
             return
         }
-        cmd.execute(mirai, event)
+        val args = CommandArgs(label, a.slice(1..a.lastIndex).toTypedArray())
+        try {
+            cmd.execute(mirai, event, args)
+        } catch (ex: Exception) {
+            event.channel.sendMessage(EmbedBuilder()
+                    .setTitle("Oh shit boi")
+                    .setColor(Color.red)
+                    .addField("Error", "An error occoured when executing command $label! ($cmd)", false)
+                    .addField("Description", ensureLimit(ex.getStackTraceText()), false)
+                    .build()).queue()
+        }
     }
 
     fun getCommand(label: String) = knownCommands.firstOrNull {
@@ -53,4 +69,12 @@ class CommandManager(val mirai: Mirai) : ListenerAdapter() {
 
     val commands: List<Command>
         get() = ArrayList(knownCommands)
+}
+const val DISCORD_LIMIT = 1000
+private fun ensureLimit(synopsis: String): String {
+    val size = synopsis.count()
+    if (size > DISCORD_LIMIT) {
+        return synopsis.substring(0, DISCORD_LIMIT)
+    }
+    return synopsis
 }

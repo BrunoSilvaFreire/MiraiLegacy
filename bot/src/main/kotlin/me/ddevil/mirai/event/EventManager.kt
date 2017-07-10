@@ -37,8 +37,3 @@ class EventManager {
     }
 }
 
-class Event {
-    fun call(manager: EventManager) {
-        manager.call(this)
-    }
-}

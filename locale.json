@@ -1,0 +1,8 @@
+{
+  "commands": {
+    "unknownCommand": "Sorry {author}, I don't know that command :c"
+  },
+  "misc": {
+    "init": "Mirai initialized with {plugins} plugins and {commands} commands."
+  }
+}
