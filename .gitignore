@@ -10,7 +10,6 @@
 *.rar
 hs_err_pid*
 .gradle
-.idea
 /build/
 plugins
 bot/build

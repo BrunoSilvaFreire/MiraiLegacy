@@ -10,11 +10,13 @@ import me.ddevil.mirai.locale.MessageVariable
 import me.ddevil.mirai.locale.MiraiLocale
 import me.ddevil.mirai.permission.PermissionManager
 import me.ddevil.mirai.plugin.PluginManager
+import me.ddevil.util.logger
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.MessageChannel
 import java.io.File
+import java.util.logging.Logger
 
 const val mainConfigFileName = "miraiConfig.json"
 const val configTokenIdentifier = "token"
@@ -24,17 +26,17 @@ class Mirai
 private
 constructor(
         val config: MiraiConfig
-) : CommandOwner {
+        ) : CommandOwner {
     companion object {
         @JvmOverloads
         fun createLocal(path: String = "./$mainConfigFileName") {
             val miraiConfigFile = File(path)
             if (!miraiConfigFile.exists()) {
-                println("Config file was not found ${miraiConfigFile.absolutePath}, creating a default one, plz configure it correctly before launching again")
+                logger.warning("Config file was not found ${miraiConfigFile.absolutePath}, creating a default one, plz configure it correctly before launching again")
                 miraiConfigFile.writeText(JsonObject(MiraiConfig.example.serialize()).toJson())
                 return
             }
-
+            logger.info("Using config file '${miraiConfigFile.absolutePath}'")
             val json = JsonParser().parseObject(miraiConfigFile)
             val config = MiraiConfig.fromJson(json)
             createFromConfig(config)
@@ -54,7 +56,6 @@ constructor(
     val pluginManager = PluginManager(this)
     val commandManager = CommandManager(this)
     val locale = MiraiLocale(File("./${MiraiLocale.fileName}"))
-
 
     init {
         pluginManager.init()
