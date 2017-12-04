@@ -14,7 +14,7 @@ import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 const val DISCORD_LIMIT = 1000
 
-class AnimeCommand(val plugin: AnimeQuery) : Command(setOf("anime"), listOf("Searches for the specified anime on MAL")) {
+class AnimeCommand(val plugin: AnimeQuery) : Command(setOf("anime"), listOf("Searches for the specified anime on MAL"), plugin) {
     private val lastResults = HashMap<User, List<Anime>>()
     override fun execute(mirai: Mirai, event: MessageReceivedEvent, args: CommandArgs) {
         val ch = event.channel

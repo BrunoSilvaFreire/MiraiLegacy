@@ -11,12 +11,10 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter
 import java.awt.Color
 
 class CommandManager(val mirai: Mirai) : ListenerAdapter() {
-    companion object {
-        val defaultCommands = arrayOf(
-                HelpCommand(),
-                PluginCommand()
-        )
-    }
+    val defaultCommands = arrayOf(
+            HelpCommand(mirai),
+            PluginCommand(mirai)
+    )
 
     private var knownCommands = ArrayList<Command>()
 

@@ -2,8 +2,8 @@ group 'me.ddevil'
 version '1.0.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.1.3-2'
-
+    ext.kotlin_version = '1.2.0'
+    ext.main_repo = "http://repo.imddevil.com/repository/maven-snapshots/"
     repositories {
         mavenCentral()
         maven {
@@ -14,5 +14,32 @@ buildscript {
     dependencies {
         classpath "com.github.jengelman.gradle.plugins:shadow:1.2.4"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+def mirai_module = "miraiModule"
+allprojects {
+    afterEvaluate {
+        if (ext.has(mirai_module) && (boolean) ext.get(mirai_module)) {
+            repositories {
+                mavenCentral()
+                jcenter()
+                maven {
+                    url = "http://repo.imddevil.com/repository/maven-snapshots/"
+                }
+            }
+            dependencies {
+                compile project(':bot')
+            }
+            compileKotlin {
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+            compileTestKotlin {
+                kotlinOptions {
+                    jvmTarget = "1.8"
+                }
+            }
+        }
     }
 }

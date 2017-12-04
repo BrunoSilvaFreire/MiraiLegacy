@@ -1,5 +1,7 @@
 package me.ddevil.mirai
 
+import me.ddevil.json.JsonObject
+import me.ddevil.json.parse.JsonParser
 import me.ddevil.mirai.command.CommandManager
 import me.ddevil.mirai.command.CommandOwner
 import me.ddevil.mirai.event.EventManager
@@ -18,9 +20,31 @@ const val mainConfigFileName = "miraiConfig.json"
 const val configTokenIdentifier = "token"
 const val exampleToken = "Put ur token hear :D"
 
-class Mirai(
+class Mirai
+private
+constructor(
         val config: MiraiConfig
 ) : CommandOwner {
+    companion object {
+        @JvmOverloads
+        fun createLocal(path: String = "./$mainConfigFileName") {
+            val miraiConfigFile = File(path)
+            if (!miraiConfigFile.exists()) {
+                println("Config file was not found ${miraiConfigFile.absolutePath}, creating a default one, plz configure it correctly before launching again")
+                miraiConfigFile.writeText(JsonObject(MiraiConfig.example.serialize()).toJson())
+                return
+            }
+
+            val json = JsonParser().parseObject(miraiConfigFile)
+            val config = MiraiConfig.fromJson(json)
+            createFromConfig(config)
+        }
+
+        fun createFromConfig(config: MiraiConfig) {
+            Mirai(config)
+        }
+    }
+
     override val pluginPrefix = "mirai"
     val jda: JDA = JDABuilder(AccountType.BOT)
             .setToken(config.token)
