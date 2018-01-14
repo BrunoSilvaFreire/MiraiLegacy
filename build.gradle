@@ -2,7 +2,7 @@ group 'me.ddevil'
 version '1.0.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.2.0'
+    ext.kotlin_version = '1.2.10'
     ext.main_repo = "http://repo.imddevil.com/repository/maven-snapshots/"
     repositories {
         mavenCentral()

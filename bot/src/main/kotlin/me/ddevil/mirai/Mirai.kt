@@ -12,6 +12,7 @@ import me.ddevil.mirai.permission.PermissionManager
 import me.ddevil.mirai.plugin.PluginManager
 import me.ddevil.util.logger
 import net.dv8tion.jda.core.AccountType
+import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.MessageChannel
@@ -26,24 +27,24 @@ class Mirai
 private
 constructor(
         val config: MiraiConfig
-        ) : CommandOwner {
+) : CommandOwner {
     companion object {
         @JvmOverloads
-        fun createLocal(path: String = "./$mainConfigFileName") {
+        fun createLocal(path: String = "./$mainConfigFileName"): Mirai? {
             val miraiConfigFile = File(path)
             if (!miraiConfigFile.exists()) {
                 logger.warning("Config file was not found ${miraiConfigFile.absolutePath}, creating a default one, plz configure it correctly before launching again")
                 miraiConfigFile.writeText(JsonObject(MiraiConfig.example.serialize()).toJson())
-                return
+                return null
             }
             logger.info("Using config file '${miraiConfigFile.absolutePath}'")
             val json = JsonParser().parseObject(miraiConfigFile)
             val config = MiraiConfig.fromJson(json)
-            createFromConfig(config)
+            return createFromConfig(config)
         }
 
-        fun createFromConfig(config: MiraiConfig) {
-            Mirai(config)
+        fun createFromConfig(config: MiraiConfig): Mirai {
+            return Mirai(config)
         }
     }
 
@@ -86,6 +87,12 @@ constructor(
 
     fun sendMessage(channel: MessageChannel, msg: String) {
         channel.sendMessage(msg).queue()
+    }
+
+    fun sendEmbed(channel: MessageChannel, builder: EmbedBuilder.() -> Unit) {
+        val b = EmbedBuilder()
+        b.builder()
+        channel.sendMessage(b.build())
     }
 }
 

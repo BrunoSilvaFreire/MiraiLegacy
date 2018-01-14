@@ -2,26 +2,35 @@ package me.ddevil.mirai.anime.command
 
 import me.ddevil.mal.anime.Anime
 import me.ddevil.mal.anime.AnimeStatus
-import me.ddevil.mal.request.AnimeSearchRequest
+import me.ddevil.mal.misc.Media
 import me.ddevil.mirai.Mirai
 import me.ddevil.mirai.anime.AnimeQuery
+import me.ddevil.mirai.anime.query.Query
+import me.ddevil.mirai.anime.query.QueryExecutor
+import me.ddevil.mirai.anime.query.UserHistory
 import me.ddevil.mirai.command.Command
 import me.ddevil.util.command.CommandArgs
+import me.ddevil.util.exception.WTFException
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.MessageChannel
 import net.dv8tion.jda.core.entities.User
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 const val DISCORD_LIMIT = 1000
+const val ANIME_LABEL = "anime"
+const val MANGA_LABEL = "manga"
 
-class AnimeCommand(val plugin: AnimeQuery) : Command(setOf("anime"), listOf("Searches for the specified anime on MAL"), plugin) {
-    private val lastResults = HashMap<User, List<Anime>>()
+class AnimeCommand(val plugin: AnimeQuery) : Command(
+        setOf(ANIME_LABEL, MANGA_LABEL),
+        listOf("Searches for the specified anime on MAL"),
+        plugin
+) {
+    private val historyCache = HashMap<User, UserHistory>()
     override fun execute(mirai: Mirai, event: MessageReceivedEvent, args: CommandArgs) {
         val ch = event.channel
         args.getStringOrElse(0, {
             mirai.sendMessage(ch, "You must use either search or select!")
-        }) {
-            commandType ->
+        }) { commandType ->
             val sender = event.author
             when (commandType) {
                 "search" -> handleSearch(sender, args, ch, mirai)
@@ -35,42 +44,48 @@ class AnimeCommand(val plugin: AnimeQuery) : Command(setOf("anime"), listOf("Sea
 
     private fun handleSearch(sender: User, args: CommandArgs, ch: MessageChannel, mirai: Mirai) {
         args.joinFromAnd(1) { animeName ->
-            val request = AnimeSearchRequest(animeName)
-            val result = plugin.requestManager.request(request)
+            val query = when (args.label) {
+                ANIME_LABEL -> Query.ofAnime(animeName)
+                MANGA_LABEL -> Query.ofManga(animeName)
+                else -> throw WTFException()
+            }
+
+            val result = query.execute(plugin)
+            val e = query.executor as QueryExecutor<Media>
             when {
                 result.isEmpty() -> mirai.sendMessage(ch, "Couldn't find any anime with the name $animeName! :c")
-                result.size == 1 -> sendAnime(ch, result.first())
+                result.size == 1 -> e.sendResult(ch, result.first())
                 else -> {
                     mirai.sendMessage(ch, "Found a total of ${result.size} results. Select which one to display using select:")
-                    val msg = ensureLimit(getMsg(result))
+                    val msg = ensureLimit("```" + e.resultToText(result) + "```")
                     mirai.sendMessage(ch, msg)
-                    lastResults[sender] = result
+                    getHistory(sender).addQuery(query)
                 }
             }
         }
     }
 
-    private fun getMsg(result: List<Anime>) = "```" + result.joinToString(System.lineSeparator()) {
-        var msg = "${result.indexOf(it)} - ${it.title} [${it.type.name.toLowerCase().capitalize()}]"
-        if (!it.englishTitle.isNullOrEmpty()) {
-            msg += " (${it.englishTitle})"
+    private fun getHistory(sender: User): UserHistory {
+        return historyCache.getOrPut(sender) {
+            UserHistory()
         }
-        return@joinToString msg
-    } + "```"
+    }
+
 
     private fun handleSelect(sender: User, args: CommandArgs, ch: MessageChannel, mirai: Mirai) {
-        if (sender in lastResults) {
-            val search = lastResults[sender]!!
+        val history = getHistory(sender)
+        if (history.hasAny) {
+
             args.getIntOrElse(1, {
                 mirai.sendMessage(ch, "You must provide an index!")
             }, {
                 mirai.sendMessage(ch, "Invalid number!")
-            }) {
-                index ->
+            }) { index ->
+                val search = history.last
                 if (index < 0 || index > search.lastIndex) {
                     mirai.sendMessage(ch, "Index out of bounds!")
                 }
-                sendAnime(ch, search[index])
+                (search.executor as QueryExecutor<Media>).sendResult(ch, search[index])
             }
         } else {
             mirai.sendMessage(ch, "You don't have any past queries.")
