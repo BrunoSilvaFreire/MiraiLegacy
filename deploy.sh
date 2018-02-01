@@ -25,5 +25,5 @@ for D in output/plugins/*; do
         cp  ${filePath} "$1/plugins/${projectName}.jar"  # your processing here
     fi
 done
-ch u+x $1/mirai.sh
-(cd $1; $1/mirai.sh start)
+chmod u+x $1/mirai.sh
+(cd $1; exec $1/mirai.sh start)
