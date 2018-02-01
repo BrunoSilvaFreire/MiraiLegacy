@@ -17,6 +17,8 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.MessageChannel
 import java.io.File
+import java.util.logging.FileHandler
+import java.util.logging.Logger
 
 const val mainConfigFileName = "miraiConfig.json"
 const val configTokenIdentifier = "token"
@@ -56,13 +58,23 @@ constructor(
     val pluginManager = PluginManager(this)
     val commandManager = CommandManager(this)
     val locale = MiraiLocale(File("./${MiraiLocale.fileName}"))
+    val logger = Logger.getLogger("Mirai")
 
     init {
+        logger.addHandler(FileHandler())
         pluginManager.init()
         broadcast(Lang.MIRAI_INIT,
                 MessageVariable("plugins", pluginManager.plugins.size.toString()),
                 MessageVariable("commands", commandManager.commands.size.toString())
         )
+    }
+
+    fun info(msg: String) {
+        logger.info("[Mirai] $msg")
+    }
+
+    fun severe(msg: String) {
+        logger.severe("[Mirai] $msg")
     }
 
     fun broadcast(lang: Lang, vararg variables: MessageVariable) {

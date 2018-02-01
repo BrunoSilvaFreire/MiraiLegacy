@@ -35,30 +35,30 @@ class PluginManager(
 
     private fun loadPlugins() {
         if (!pluginsFolder.exists()) {
-            println("Plugins folder ${pluginsFolder.absolutePath} doesn't exists, making now.")
+            mirai.info("Plugins folder ${pluginsFolder.absolutePath} doesn't exists, making now.")
             pluginsFolder.mkdirs()
         }
         val possiblePlugins = pluginsFolder.listFiles { f ->
             return@listFiles f.extension.endsWith(pluginExtension)
         }
         if (possiblePlugins == null || possiblePlugins.isEmpty()) {
-            println("Couldn't find any plugins. (${possiblePlugins})")
+            mirai.info("Couldn't find any plugins. ($possiblePlugins)")
             return
         }
 
         for (file in possiblePlugins) {
-            println("Trying to load file $file as plugin")
+            mirai.info("Trying to load file $file as plugin")
             try {
                 val plugin = tryLoadPlugin(file)
                 if (plugin.onEnable()) {
                     loadedPlugins += plugin
-                    println("Plugin $plugin loaded")
+                    mirai.info("Plugin $plugin loaded")
                 } else {
-                    println("Plugin $plugin has notified us not to load it, skipping.")
+                    mirai.info("Plugin $plugin has notified us not to load it, skipping.")
                 }
             } catch(e: Exception) {
-                println("Found exception when loading plugin ${file.name}")
-                println("```${e.getStackTraceText()}```")
+                mirai.severe("Found exception when loading plugin ${file.name}")
+                mirai.severe("```${e.getStackTraceText()}```")
             }
         }
     }
