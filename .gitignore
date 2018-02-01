@@ -10,10 +10,7 @@
 *.rar
 hs_err_pid*
 .gradle
-/build/
-plugins
-bot/build
-anime-plugin/build
+build
 miraiConfig.json
 gradle-app.setting
 !gradle-wrapper.jar
