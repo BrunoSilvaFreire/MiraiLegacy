@@ -5,7 +5,7 @@ import me.ddevil.json.parse.JsonParser
 import me.ddevil.util.Serializable
 import java.io.File
 
-class JsonDataHandler : DataHandler {
+object JsonDataHandler : DataHandler {
     override val fileExtension = "json"
     val parser = JsonParser()
 
