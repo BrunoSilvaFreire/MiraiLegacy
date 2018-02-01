@@ -25,5 +25,6 @@ for D in output/plugins/*; do
         cp  ${filePath} "$1/plugins/${projectName}.jar"  # your processing here
     fi
 done
+echo "{\"token\": \"$2\"}">$1/miraiConfig.json
 chmod u+x $1/mirai.sh
 (cd $1; exec $1/mirai.sh start)
