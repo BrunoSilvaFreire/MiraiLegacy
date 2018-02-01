@@ -2,6 +2,7 @@ package me.ddevil.mirai.command
 
 import me.ddevil.mirai.Mirai
 import me.ddevil.mirai.locale.Lang
+import me.ddevil.mirai.locale.MessageVariable
 import me.ddevil.mirai.util.exportVariables
 import me.ddevil.util.getStackTraceText
 import net.dv8tion.jda.core.EmbedBuilder
@@ -51,7 +52,8 @@ class CommandManager(val mirai: Mirai) : ListenerAdapter() {
 
         //Check if has permission
         if (!mirai.permissionManager.hasPermission(event.member, cmd)) {
-            mirai.sendMessage(event.channel, Lang.NO_PERMISSION, *event.exportVariables())
+            val permVar = MessageVariable("perm", cmd.permission)
+            mirai.sendMessage(event.channel, Lang.NO_PERMISSION, *event.exportVariables() + permVar)
             return
         }
         val args = CommandArgs(label, a.slice(1..a.lastIndex).toTypedArray())
