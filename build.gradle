@@ -5,7 +5,7 @@ buildscript {
     ext.kotlin_version = '1.2.10'
     ext.main_repo = "http://repo.imddevil.com/repository/maven-snapshots/"
     ext.mirai_module = "miraiModule"
-
+    ext.discord_token = "discord_token"
     repositories {
         mavenCentral()
         maven {
@@ -42,6 +42,11 @@ allprojects {
             compileTestKotlin {
                 kotlinOptions {
                     jvmTarget = "1.8"
+                }
+            }
+            if (properties.containsKey(discord_token)) {
+                test {
+                    systemProperty(discord_token, properties[discord_token])
                 }
             }
         }

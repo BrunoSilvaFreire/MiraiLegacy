@@ -1,17 +1,10 @@
 package me.ddevil.mirai.plugin
 
-import me.ddevil.json.parse.JsonParser
 import me.ddevil.mirai.Mirai
-import me.ddevil.mirai.exception.plugin.PluginInfoMissingException
-import me.ddevil.mirai.plugin.loader.PluginClassLoader
+import me.ddevil.mirai.plugin.loader.PluginLoader
 import me.ddevil.mirai.plugin.loader.pluginExtension
-import me.ddevil.mirai.plugin.loader.pluginInfoEntryLocation
 import me.ddevil.util.getStackTraceText
 import java.io.File
-import java.io.FileFilter
-import java.net.URLClassLoader
-import java.util.jar.JarEntry
-import java.util.jar.JarFile
 
 class PluginManager(
         val mirai: Mirai
@@ -20,6 +13,7 @@ class PluginManager(
         const val pluginsFolderName = "plugins"
     }
 
+    val pluginLoader = PluginLoader()
     val pluginsFolder = File("./$pluginsFolderName")
 
     private val loadedPlugins = HashSet<Plugin>()
@@ -49,7 +43,11 @@ class PluginManager(
         for (file in possiblePlugins) {
             mirai.info("Trying to load file $file as plugin")
             try {
-                val plugin = tryLoadPlugin(file)
+                val plugin = pluginLoader.tryLoadPlugin(file, mirai)
+                if (plugin == null){
+                    mirai.info("Could not load plugin '${file.name}'")
+                    continue
+                }
                 if (plugin.onEnable()) {
                     loadedPlugins += plugin
                     mirai.info("Plugin $plugin loaded")
@@ -65,16 +63,5 @@ class PluginManager(
         }
     }
 
-    private fun tryLoadPlugin(file: File): Plugin {
-        val jar = JarFile(file)
-        val infoEntry = jar.getJarEntry(pluginInfoEntryLocation) ?: throw PluginInfoMissingException(jar)
-        val json = JsonParser().parseObject(jar.getInputStream(infoEntry))
-        val pluginInfo = PluginInfo.fromJson(json)
-        val loader = PluginClassLoader(file, this::class.java.classLoader)
-        val mainInstance = loader[pluginInfo.main]
-        val plugin = mainInstance as Plugin
-        plugin.init(pluginInfo, mirai)
-        return plugin
-    }
 
 }
