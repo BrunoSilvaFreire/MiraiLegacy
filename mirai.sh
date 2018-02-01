@@ -28,7 +28,7 @@ stop() {
         rm ${PID}
         echo "Mirai was stopped @ ${pid}!"
     else
-        echo "Mirai is not running!"
+        echo "Mirai is not running! Pid file not found"
     fi
 }
 

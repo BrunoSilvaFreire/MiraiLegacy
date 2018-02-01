@@ -28,7 +28,7 @@ class AnimeCommand(val plugin: AnimeQuery) : Command(
     private val historyCache = HashMap<User, UserHistory>()
     override fun execute(mirai: Mirai, event: MessageReceivedEvent, args: CommandArgs) {
         val ch = event.channel
-        val subCommand =args.getStringOrElse(0, {
+        args.getStringOrElse(0, {
             mirai.sendMessage(ch, "You must use either search or select!")
         }) { commandType ->
             val sender = event.author
@@ -43,6 +43,10 @@ class AnimeCommand(val plugin: AnimeQuery) : Command(
     }
 
     private fun handleSearch(sender: User, args: CommandArgs, ch: MessageChannel, mirai: Mirai) {
+        if (args.length <= 1) {
+            mirai.sendMessage(ch, "Usage: /anime search (anime name)")
+            return
+        }
         args.joinFromAnd(1) { animeName ->
             val query = when (args.label) {
                 ANIME_LABEL -> Query.ofAnime(animeName)
@@ -57,7 +61,7 @@ class AnimeCommand(val plugin: AnimeQuery) : Command(
                 result.size == 1 -> e.sendResult(ch, result.first())
                 else -> {
                     mirai.sendMessage(ch, "Found a total of ${result.size} results. Select which one to display using select:")
-                    val msg = ensureLimit("```" + e.resultToText(result) + "```")
+                    val msg = ensureLimit(e.resultToText(result))
                     mirai.sendMessage(ch, msg)
                     getHistory(sender).addQuery(query)
                 }

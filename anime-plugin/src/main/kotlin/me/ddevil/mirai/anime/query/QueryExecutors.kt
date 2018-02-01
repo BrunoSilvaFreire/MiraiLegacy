@@ -35,7 +35,7 @@ class MangaQueryExecutor : QueryExecutor<Manga> {
 class AnimeQueryExecutor : QueryExecutor<Anime> {
     override fun resultToText(result: List<Anime>): String {
         return result.joinToString(System.lineSeparator()) {
-            var msg = "${result.indexOf(it)} - ${it.title} [${it.type.name.toLowerCase().capitalize()}]"
+            var msg = "**${result.indexOf(it)}** - *${it.title} [${it.type.name.toLowerCase().capitalize()}]*"
             if (!it.englishTitle.isEmpty()) {
                 msg += " (${it.englishTitle})"
             }
