@@ -4,6 +4,8 @@ version '1.0.0-SNAPSHOT'
 buildscript {
     ext.kotlin_version = '1.2.10'
     ext.main_repo = "http://repo.imddevil.com/repository/maven-snapshots/"
+    ext.mirai_module = "miraiModule"
+
     repositories {
         mavenCentral()
         maven {
@@ -16,10 +18,12 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
-def mirai_module = "miraiModule"
+
+def rootBuildDir = new File(rootDir, "output")
 allprojects {
     afterEvaluate {
         if (ext.has(mirai_module) && (boolean) ext.get(mirai_module)) {
+            it.buildDir = new File(rootBuildDir, "plugins/$it.name")
             repositories {
                 mavenCentral()
                 jcenter()

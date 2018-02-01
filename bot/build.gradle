@@ -4,6 +4,8 @@ apply plugin: 'com.github.johnrengelman.shadow'
 
 sourceCompatibility = 1.8
 
+buildDir = new File(rootDir, "output/bot")
+
 repositories {
     mavenCentral()
     jcenter()
