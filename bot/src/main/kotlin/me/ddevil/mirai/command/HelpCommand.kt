@@ -17,6 +17,6 @@ class HelpCommand(mirai: Mirai) : Command(
             val labels = cmd.labels.joinToString { "**$it**" }
             msg += "$labels: *${cmd.description}*${System.lineSeparator()}"
         }
-        mirai.sendMessage(event.channel, msg)
+        mirai.sendMessage(event.channel, header + msg)
     }
 }
