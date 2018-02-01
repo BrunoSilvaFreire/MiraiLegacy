@@ -5,9 +5,14 @@ ext.miraiModule = true
 
 sourceCompatibility = 1.8
 
+
 shadowJar {
     dependencies {
-        include(dependency("me.ddevil:kmal:1.0.0-SNAPSHOT"))
+        it.include(it.dependency("me.ddevil:kmal:1.0.0-SNAPSHOT"))
+        it.include(it.dependency("org.apache.httpcomponents:httpclient:4.5.3"))
+        it.include(it.dependency("org.apache.httpcomponents:httpcore:4.4.6"))
+        it.include(it.dependency("commons-logging:commons-logging:1.2"))
+        it.include(it.dependency("commons-codec:commons-codec:1.9"))
     }
 }
 

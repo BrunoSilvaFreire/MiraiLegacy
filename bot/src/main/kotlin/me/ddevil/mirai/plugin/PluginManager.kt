@@ -56,9 +56,11 @@ class PluginManager(
                 } else {
                     mirai.info("Plugin $plugin has notified us not to load it, skipping.")
                 }
-            } catch(e: Exception) {
+            } catch (e: Exception) {
                 mirai.severe("Found exception when loading plugin ${file.name}")
                 mirai.severe("```${e.getStackTraceText()}```")
+            } catch (e: ClassNotFoundException) {
+
             }
         }
     }
