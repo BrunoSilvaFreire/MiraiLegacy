@@ -7,7 +7,7 @@ import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import me.ddevil.mirai.Mirai
 import me.ddevil.mirai.command.Command
 import me.ddevil.mirai.music.MusicPlugin
-import me.ddevil.util.command.CommandArgs
+import me.ddevil.mirai.command.CommandArgs
 import net.dv8tion.jda.core.entities.VoiceChannel
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 import java.awt.Color

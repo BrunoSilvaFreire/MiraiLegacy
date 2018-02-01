@@ -1,7 +1,6 @@
 package me.ddevil.mirai.command
 
 import me.ddevil.mirai.Mirai
-import me.ddevil.util.command.CommandArgs
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 class HelpCommand(mirai: Mirai) : Command(

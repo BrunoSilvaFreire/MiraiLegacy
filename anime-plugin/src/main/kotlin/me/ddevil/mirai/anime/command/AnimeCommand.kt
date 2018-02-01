@@ -9,7 +9,7 @@ import me.ddevil.mirai.anime.query.Query
 import me.ddevil.mirai.anime.query.QueryExecutor
 import me.ddevil.mirai.anime.query.UserHistory
 import me.ddevil.mirai.command.Command
-import me.ddevil.util.command.CommandArgs
+import me.ddevil.mirai.command.CommandArgs
 import me.ddevil.util.exception.WTFException
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.MessageChannel
@@ -28,7 +28,7 @@ class AnimeCommand(val plugin: AnimeQuery) : Command(
     private val historyCache = HashMap<User, UserHistory>()
     override fun execute(mirai: Mirai, event: MessageReceivedEvent, args: CommandArgs) {
         val ch = event.channel
-        args.getStringOrElse(0, {
+        val subCommand =args.getStringOrElse(0, {
             mirai.sendMessage(ch, "You must use either search or select!")
         }) { commandType ->
             val sender = event.author

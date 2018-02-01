@@ -2,7 +2,6 @@ package me.ddevil.mirai.command
 
 import me.ddevil.mirai.Mirai
 import me.ddevil.mirai.plugin.Plugin
-import me.ddevil.util.command.CommandArgs
 import net.dv8tion.jda.core.events.message.MessageReceivedEvent
 
 abstract class Command(
