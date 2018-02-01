@@ -9,7 +9,13 @@ class DiscordConnectTest {
 
     @Test
     fun miraiCreateTest() {
-        val mirai = Mirai.createLocal()
+        val mirai: Mirai?
+        try {
+            mirai = Mirai.createLocal()
+        } catch (ex: Exception) {
+            //Token file problem
+            return
+        }
         globalLogger.log(Level.INFO, "Created mirai = '$mirai'")
     }
 }

@@ -8,8 +8,14 @@ repositories {
     mavenCentral()
     jcenter()
     maven {
+        name = "ddevil"
         url = "http://repo.imddevil.com/repository/maven-snapshots/"
     }
+    maven {
+        name = "sk89q"
+        url = "http://maven.sk89q.com/repo/"
+    }
+
 }
 
 jar {
@@ -21,9 +27,10 @@ jar {
 }
 
 dependencies {
-    compile "me.ddevil:json:1.0.1-SNAPSHOT"
-    compile "me.ddevil:kotlin-utils:1.0.1-SNAPSHOT"
+    compile "me.ddevil:json:1.0.0-SNAPSHOT"
+    compile "me.ddevil:kotlin-utils:1.0.0-SNAPSHOT"
     compile 'net.dv8tion:JDA:3.3.1_308'
+    //compile "com.sk89q.intake:intake:4.0-SNAPSHOT"
     testCompile 'junit:junit:4.12'
 }
 compileKotlin {

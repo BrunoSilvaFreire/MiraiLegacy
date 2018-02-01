@@ -44,15 +44,15 @@
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-databind:2.8.5" level="project" />
     <orderEntry type="library" name="Gradle: org.jsoup:jsoup:1.10.1" level="project" />
     <orderEntry type="library" name="Gradle: net.iharder:base64:2.3.9" level="project" />
-    <orderEntry type="library" name="Gradle: me.ddevil:json:1.0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Gradle: me.ddevil:kotlin-utils:1.0.1-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: me.ddevil:json:1.0.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Gradle: me.ddevil:kotlin-utils:1.0.0-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Gradle: net.dv8tion:JDA:3.3.1_308" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.httpcomponents:httpcore:4.4.4" level="project" />
     <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
     <orderEntry type="library" name="Gradle: commons-codec:commons-codec:1.9" level="project" />
     <orderEntry type="library" name="Gradle: com.fasterxml.jackson.core:jackson-annotations:2.8.0" level="project" />
     <orderEntry type="library" name="Gradle: com.google.guava:guava:19.0" level="project" />
-    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.0" level="project" />
+    <orderEntry type="library" name="Gradle: org.jetbrains.kotlin:kotlin-stdlib:1.2.10" level="project" />
     <orderEntry type="library" name="Gradle: com.google.code.findbugs:jsr305:3.0.2" level="project" />
     <orderEntry type="library" name="Gradle: org.apache.commons:commons-collections4:4.1" level="project" />
     <orderEntry type="library" name="Gradle: org.json:json:20160810" level="project" />

@@ -17,7 +17,6 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.MessageChannel
 import java.io.File
-import java.util.logging.Logger
 
 const val mainConfigFileName = "miraiConfig.json"
 const val configTokenIdentifier = "token"
