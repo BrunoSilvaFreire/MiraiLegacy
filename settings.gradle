@@ -1,2 +1,2 @@
 rootProject.name = 'mirai'
-include 'bot', 'anime-plugin', 'music-plugin'
+include 'bot', 'anime-plugin', 'music-plugin', 'welcome-plugin'
