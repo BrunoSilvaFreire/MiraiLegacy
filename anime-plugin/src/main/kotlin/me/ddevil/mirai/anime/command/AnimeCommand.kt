@@ -53,19 +53,21 @@ class AnimeCommand(val plugin: AnimeQuery) : Command(
                 MANGA_LABEL -> Query.ofManga(animeName)
                 else -> throw WTFException()
             }
-
-            val result = query.execute(plugin)
-            val e = query.executor as QueryExecutor<Media>
-            when {
-                result.isEmpty() -> mirai.sendMessage(ch, "Couldn't find any anime with the name $animeName! :c")
-                result.size == 1 -> e.sendResult(ch, result.first())
-                else -> {
-                    mirai.sendMessage(ch, "Found a total of ${result.size} results. Select which one to display using select:")
-                    val msg = ensureLimit(e.resultToText(result))
-                    mirai.sendMessage(ch, msg)
-                    getHistory(sender).addQuery(query)
+            ch.sendMessage("Searching for ${args.label} '$animeName'").queue {
+                val result = query.execute(plugin)
+                val e = query.executor as QueryExecutor<Media>
+                when {
+                    result.isEmpty() -> mirai.sendMessage(ch, "Couldn't find any anime with the name $animeName! :c")
+                    result.size == 1 -> e.sendResult(ch, result.first())
+                    else -> {
+                        val msg = "Found a total of ${result.size} results. Select which one to display using select:" +
+                                ensureLimit(e.resultToText(result))
+                        it.editMessage(msg)
+                        getHistory(sender).addQuery(query)
+                    }
                 }
             }
+
         }
     }
 
