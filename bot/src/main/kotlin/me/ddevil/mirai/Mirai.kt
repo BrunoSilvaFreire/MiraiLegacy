@@ -19,6 +19,7 @@ import net.dv8tion.jda.core.entities.MessageChannel
 import java.io.File
 import java.util.logging.FileHandler
 import java.util.logging.Logger
+import java.util.logging.SimpleFormatter
 
 const val mainConfigFileName = "miraiConfig.json"
 const val configTokenIdentifier = "token"
@@ -61,7 +62,9 @@ constructor(
     val logger = Logger.getLogger("Mirai")
 
     init {
-        logger.addHandler(FileHandler())
+        val fh = FileHandler("output.log")
+        fh.formatter = SimpleFormatter()
+        logger.addHandler(fh)
         pluginManager.init()
         broadcast(Lang.MIRAI_INIT,
                 MessageVariable("plugins", pluginManager.plugins.size.toString()),
